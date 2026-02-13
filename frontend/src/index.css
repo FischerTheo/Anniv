@@ -1,0 +1,84 @@
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: #ffffff;
+  background-color: #0a0e1a;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  font-weight: 700;
+  color: #00bfff;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+a:hover {
+  color: #0096ff;
+  text-shadow: 0 0 10px rgba(0, 150, 255, 0.5);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #0a0e1a;
+  color: #ffffff;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 1.8rem;
+  line-height: 1.2;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+button {
+  border-radius: 4px;
+  border: 2px solid #0096ff;
+  padding: 0.875rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 900;
+  font-family: inherit;
+  background: linear-gradient(180deg, #0066cc 0%, #004d99 100%);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+button:hover {
+  box-shadow: 0 0 20px rgba(0, 150, 255, 0.4);
+  transform: translateY(-2px);
+  border-color: #00bfff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 2px solid #0096ff;
+  outline-offset: 2px;
+}
+
+button:active {
+  transform: translateY(0);
+}
+
