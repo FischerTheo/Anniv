@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Responses.css";
 import { useShakeDetection } from "./useShakeDetection";
+import config from './config';
 
 function Responses() {
   const [data, setData] = useState([]);
@@ -20,7 +21,7 @@ function Responses() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/guests");
+      const res = await fetch(`${config.API_BASE_URL}/api/guests`);
       const guests = await res.json();
       setData(guests);
       setLoading(false);

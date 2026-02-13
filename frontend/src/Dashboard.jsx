@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import "./Dashboard.css";
 import { useShakeDetection } from "./useShakeDetection";
+import config from './config';
 
 const COLORS = ["#646cff", "#535bf2", "#4c4adb", "#4239c4", "#3828ad"];
 
@@ -46,7 +47,7 @@ function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/guests");
+      const res = await fetch(`${config.API_BASE_URL}/api/guests`);
       const guests = await res.json();
       setData(guests);
       setLoading(false);

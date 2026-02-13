@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import { useShakeDetection } from "./useShakeDetection";
+import config from "./config";
 
 function App() {
   const [formData, setFormData] = useState({
@@ -57,7 +58,7 @@ function App() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/guests", {
+      const res = await fetch(`${config.API_BASE_URL}/api/guests`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

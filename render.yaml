@@ -1,0 +1,26 @@
+services:
+  # Backend API
+  - type: web
+    name: anniv-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false  # À définir dans le dashboard Render
+      - key: PORT
+        value: 10000
+
+  # Frontend React
+  - type: static
+    name: anniv-frontend
+    env: static
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://anniv-backend.onrender.com
