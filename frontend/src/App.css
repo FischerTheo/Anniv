@@ -129,6 +129,90 @@ form {
   cursor: pointer;
 }
 
+/* ---- Calendrier Août ---- */
+
+.calendar {
+  background: #0d1829;
+  border: 2px solid #1e3a5f;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.calendar-header-cell {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #00bfff;
+  text-transform: uppercase;
+  padding: 0.35rem 0;
+  letter-spacing: 0.05em;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: #142238;
+  color: #c0d0e0;
+  border: 2px solid transparent;
+  user-select: none;
+}
+
+.calendar-cell.empty {
+  background: transparent;
+  cursor: default;
+}
+
+.calendar-cell.weekend {
+  color: #7090b0;
+}
+
+.calendar-cell:not(.empty):hover {
+  border-color: #0096ff;
+  background: #1a3050;
+  box-shadow: 0 0 8px rgba(0, 150, 255, 0.3);
+}
+
+.calendar-cell.selected {
+  background: linear-gradient(135deg, #0066cc, #0096ff);
+  color: #fff;
+  border-color: #00bfff;
+  box-shadow: 0 0 12px rgba(0, 150, 255, 0.5);
+}
+
+.calendar-cell.selected.weekend {
+  background: linear-gradient(135deg, #004d99, #0080dd);
+}
+
+.calendar-selection {
+  text-align: center;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #00bfff;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
 button[type="submit"] {
   width: 100%;
   padding: 1rem;
@@ -234,4 +318,37 @@ a {
 a:hover {
   color: #0096ff;
   text-shadow: 0 0 10px rgba(0, 150, 255, 0.5);
+}
+
+/* ---- Bouton Expérimental ---- */
+
+.experimental-btn {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 2px solid #333;
+  border-radius: 20px;
+  background: #1a1a2e;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.experimental-btn:hover {
+  border-color: #555;
+  color: #888;
+}
+
+.experimental-btn.active {
+  border-color: #00ff88;
+  color: #00ff88;
+  background: #0d2818;
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.3);
+}
+
+.experimental-btn.active:hover {
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
 }

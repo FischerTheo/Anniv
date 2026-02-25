@@ -18,11 +18,21 @@ import config from './config';
 
 const COLORS = ["#646cff", "#535bf2", "#4c4adb", "#4239c4", "#3828ad"];
 
+// Noms des jours pour août 2026 (1er août = samedi)
+const AUGUST_2026_START_DAY = 5; // 0=Lun, 5=Sam
+const DAY_SHORT_NAMES = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+
+const getDayLabel = (dayNum) => {
+  const dayIndex = (AUGUST_2026_START_DAY + dayNum - 1) % 7;
+  return `${DAY_SHORT_NAMES[dayIndex]} ${dayNum}`;
+};
+
 function Dashboard() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showWakka, setShowWakka] = useState(false);
-  const isShaking = useShakeDetection(20);
+  const experimentalEnabled = localStorage.getItem("experimental") === "true";
+  const isShaking = useShakeDetection(experimentalEnabled);
   const [isBroken, setIsBroken] = useState(false);
 
   useEffect(() => {
@@ -40,10 +50,10 @@ function Dashboard() {
   }, []);
 
   useEffect(() => {
-    if (isShaking && !isBroken) {
+    if (isShaking && !isBroken && experimentalEnabled) {
       setIsBroken(true);
     }
-  }, [isShaking, isBroken]);
+  }, [isShaking, isBroken, experimentalEnabled]);
 
   const fetchData = async () => {
     try {
@@ -87,17 +97,20 @@ function Dashboard() {
   // Si noir (Non) majoritaire -> bouche à DROITE (partie noire)
   const isMouthLeft = yesCount > noCount;
 
-  // Statistiques jours
+  // Statistiques jours (triés par numéro de jour)
   const dayStats = {};
   data.forEach((guest) => {
-    guest.availableDays.forEach((day) => {
+    (guest.availableDays || []).forEach((day) => {
       dayStats[day] = (dayStats[day] || 0) + 1;
     });
   });
-  const dayData = Object.entries(dayStats).map(([day, count]) => ({
-    day,
-    count,
-  }));
+  const dayData = Object.entries(dayStats)
+    .sort(([a], [b]) => Number(a) - Number(b))
+    .map(([day, count]) => ({
+      day: getDayLabel(Number(day)),
+      dayNum: Number(day),
+      count,
+    }));
 
   // Statistiques horaires
   const timeStats = {};
@@ -120,7 +133,7 @@ function Dashboard() {
   const maxDayCount = Math.max(...Object.values(dayStats), 0);
   const bestDays = Object.entries(dayStats)
     .filter(([_, count]) => count === maxDayCount)
-    .map(([day]) => day);
+    .map(([day]) => getDayLabel(Number(day)));
 
   return (
     <div className="dashboard-container">

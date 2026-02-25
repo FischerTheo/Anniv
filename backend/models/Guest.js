@@ -18,8 +18,11 @@ const guestSchema = new mongoose.Schema(
       default: false,
     },
     availableDays: {
-      type: [String],
-      enum: ["Dimanche 9", "Lundi 10", "Mardi 11"],
+      type: [Number],
+      validate: {
+        validator: (arr) => arr.every((d) => Number.isInteger(d) && d >= 1 && d <= 31),
+        message: "Les jours doivent être entre 1 et 31",
+      },
       default: [],
     },
     availableTime: {

@@ -3,10 +3,19 @@ import "./Responses.css";
 import { useShakeDetection } from "./useShakeDetection";
 import config from './config';
 
+// Noms des jours pour août 2026 (1er août = samedi)
+const AUGUST_2026_START_DAY = 5;
+const DAY_SHORT_NAMES = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+const getDayLabel = (dayNum) => {
+  const dayIndex = (AUGUST_2026_START_DAY + dayNum - 1) % 7;
+  return `${DAY_SHORT_NAMES[dayIndex]} ${dayNum} août`;
+};
+
 function Responses() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const isShaking = useShakeDetection(20);
+  const experimentalEnabled = localStorage.getItem("experimental") === "true";
+  const isShaking = useShakeDetection(experimentalEnabled);
   const [isBroken, setIsBroken] = useState(false);
 
   useEffect(() => {
@@ -14,10 +23,10 @@ function Responses() {
   }, []);
 
   useEffect(() => {
-    if (isShaking && !isBroken) {
+    if (isShaking && !isBroken && experimentalEnabled) {
       setIsBroken(true);
     }
-  }, [isShaking, isBroken]);
+  }, [isShaking, isBroken, experimentalEnabled]);
 
   const fetchData = async () => {
     try {
@@ -97,8 +106,11 @@ function Responses() {
                       <span className={isBroken ? 'falling' : ''}>Jours</span> disponibles :
                     </strong>
                     <div className="tags">
-                      {guest.availableDays.map((day, idx) => (
-                        <span key={idx} className="tag tag-day">{day}</span>
+                      {guest.availableDays
+                        .slice()
+                        .sort((a, b) => a - b)
+                        .map((day, idx) => (
+                        <span key={idx} className="tag tag-day">{getDayLabel(day)}</span>
                       ))}
                     </div>
                   </div>

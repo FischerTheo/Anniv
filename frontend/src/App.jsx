@@ -3,6 +3,11 @@ import "./App.css";
 import { useShakeDetection } from "./useShakeDetection";
 import config from "./config";
 
+// Août 2026 commence un samedi (index 6 en lun=0)
+const AUGUST_2026_START_DAY = 5; // 0=Lun, ..., 5=Sam
+const DAYS_IN_AUGUST = 31;
+const DAY_NAMES = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+
 function App() {
   const [formData, setFormData] = useState({
     name: "",
@@ -12,20 +17,42 @@ function App() {
     availableTime: [],
   });
   const [status, setStatus] = useState(null);
-  const isShaking = useShakeDetection(20);
+  const [experimentalEnabled, setExperimentalEnabled] = useState(() => {
+    return localStorage.getItem("experimental") === "true";
+  });
+  const isShaking = useShakeDetection(experimentalEnabled);
   const [isBroken, setIsBroken] = useState(false);
 
+  const toggleExperimental = () => {
+    setExperimentalEnabled((prev) => {
+      const next = !prev;
+      localStorage.setItem("experimental", String(next));
+      if (!next) setIsBroken(false);
+      return next;
+    });
+  };
+
   useEffect(() => {
-    if (isShaking && !isBroken) {
+    if (isShaking && !isBroken && experimentalEnabled) {
       setIsBroken(true);
     }
-  }, [isShaking, isBroken]);
+  }, [isShaking, isBroken, experimentalEnabled]);
+
+  const toggleDay = (day) => {
+    setFormData((prev) => {
+      const days = prev.availableDays;
+      if (days.includes(day)) {
+        return { ...prev, availableDays: days.filter((d) => d !== day) };
+      } else {
+        return { ...prev, availableDays: [...days, day].sort((a, b) => a - b) };
+      }
+    });
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     
-    if (type === "checkbox" && name !== "needsAccommodation") {
-      // Pour les cases à cocher multiples (jours et horaires)
+    if (type === "checkbox" && name === "availableTime") {
       setFormData((prev) => {
         const currentArray = prev[name];
         if (checked) {
@@ -39,6 +66,31 @@ function App() {
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
+  };
+
+  // Génère les cellules du calendrier août 2026
+  const renderCalendar = () => {
+    const cells = [];
+    // Cases vides avant le 1er août (samedi = index 5)
+    for (let i = 0; i < AUGUST_2026_START_DAY; i++) {
+      cells.push(<div key={`empty-${i}`} className="calendar-cell empty" />);
+    }
+    // Jours du mois
+    for (let day = 1; day <= DAYS_IN_AUGUST; day++) {
+      const isSelected = formData.availableDays.includes(day);
+      const dayIndex = (AUGUST_2026_START_DAY + day - 1) % 7;
+      const isWeekend = dayIndex === 5 || dayIndex === 6; // Sam ou Dim
+      cells.push(
+        <div
+          key={day}
+          className={`calendar-cell${isSelected ? " selected" : ""}${isWeekend ? " weekend" : ""}`}
+          onClick={() => toggleDay(day)}
+        >
+          {day}
+        </div>
+      );
+    }
+    return cells;
   };
 
   const handleSubmit = async (e) => {
@@ -156,39 +208,22 @@ function App() {
         <div className="field">
           <label>
             <span className={isBroken ? 'falling' : ''}>Disponibilité</span>
-            {' '}- Jours (plusieurs choix possibles)
+            {' '}- Août 2026
           </label>
-          <div className="checkbox-group">
-            <label className="checkbox-option">
-              <input
-                type="checkbox"
-                name="availableDays"
-                value="Dimanche 9"
-                checked={formData.availableDays.includes("Dimanche 9")}
-                onChange={handleChange}
-              />
-              <span className={isBroken ? 'falling' : ''}>Dimanche</span> 9 août
-            </label>
-            <label className="checkbox-option">
-              <input
-                type="checkbox"
-                name="availableDays"
-                value="Lundi 10"
-                checked={formData.availableDays.includes("Lundi 10")}
-                onChange={handleChange}
-              />
-              Lundi <span className={isBroken ? 'falling' : ''}>10</span> août
-            </label>
-            <label className="checkbox-option">
-              <input
-                type="checkbox"
-                name="availableDays"
-                value="Mardi 11"
-                checked={formData.availableDays.includes("Mardi 11")}
-                onChange={handleChange}
-              />
-              <span className={isBroken ? 'falling' : ''}>Mardi</span> 11 août
-            </label>
+          <div className="calendar">
+            <div className="calendar-header">
+              {DAY_NAMES.map((d) => (
+                <div key={d} className="calendar-header-cell">{d}</div>
+              ))}
+            </div>
+            <div className="calendar-grid">
+              {renderCalendar()}
+            </div>
+            {formData.availableDays.length > 0 && (
+              <div className="calendar-selection">
+                {formData.availableDays.length} jour(s) sélectionné(s)
+              </div>
+            )}
           </div>
         </div>
 
@@ -232,6 +267,16 @@ function App() {
         <a href="/responses" style={{ color: '#646cff', fontSize: '0.9rem' }}>
           Voir les <span className={isBroken ? 'falling' : ''}>réponses</span>
         </a>
+      </div>
+
+      <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+        <button
+          type="button"
+          className={`experimental-btn${experimentalEnabled ? ' active' : ''}`}
+          onClick={toggleExperimental}
+        >
+          Expérimental
+        </button>
       </div>
     </div>
   );
