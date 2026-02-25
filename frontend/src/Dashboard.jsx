@@ -295,10 +295,10 @@ function Dashboard() {
         </div>
       </div>
 
-      <button className="back-btn" onClick={() => window.location.href = "/"}>
+      <button className="back-btn" onClick={() => window.location.href = "#/"}>
         <span className={isBroken ? 'falling' : ''}>Retour</span> au formulaire
       </button>
-      <button className="back-btn" onClick={() => window.location.href = "/responses"} style={{ marginTop: "1rem" }}>
+      <button className="back-btn" onClick={() => window.location.href = "#/responses"} style={{ marginTop: "1rem" }}>
         Voir les <span className={isBroken ? 'falling' : ''}>réponses</span>
       </button>
     </div>

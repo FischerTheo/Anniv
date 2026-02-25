@@ -135,10 +135,10 @@ function Responses() {
       )}
 
       <div className="nav-buttons">
-        <button className="nav-btn" onClick={() => window.location.href = "/"}>
+        <button className="nav-btn" onClick={() => window.location.href = "#/"}>
           <span className={isBroken ? 'falling' : ''}>Formulaire</span>
         </button>
-        <button className="nav-btn" onClick={() => window.location.href = "/dashboard"}>
+        <button className="nav-btn" onClick={() => window.location.href = "#/dashboard"}>
           <span className={isBroken ? 'falling' : ''}>Statistiques</span>
         </button>
       </div>

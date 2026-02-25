@@ -261,10 +261,10 @@ function App() {
       </form>
 
       <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-        <a href="/dashboard" style={{ color: '#646cff', fontSize: '0.9rem', marginRight: '1rem' }}>
+        <a href="#/dashboard" style={{ color: '#646cff', fontSize: '0.9rem', marginRight: '1rem' }}>
           <span className={isBroken ? 'falling' : ''}>Voir</span> les statistiques
         </a>
-        <a href="/responses" style={{ color: '#646cff', fontSize: '0.9rem' }}>
+        <a href="#/responses" style={{ color: '#646cff', fontSize: '0.9rem' }}>
           Voir les <span className={isBroken ? 'falling' : ''}>réponses</span>
         </a>
       </div>
